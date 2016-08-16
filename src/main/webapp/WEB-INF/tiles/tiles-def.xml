@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <definition name="emptyLayout" template="/WEB-INF/tiles/layout/emptyLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/layout/header.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/tiles/layout/footer.jsp"/>
+    </definition>
+
+    <definition name="popupLayout" template="/WEB-INF/tiles/layout/emptyLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/layout/header.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/tiles/layout/footer.jsp"/>
+    </definition>
+
+    <definition name="defaultLayout" template="/WEB-INF/tiles/layout/defaultLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/layout/header.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/tiles/layout/footer.jsp"/>
+        <put-attribute name="leftMenu" value="/WEB-INF/tiles/layout/leftMenu.jsp"/>
+    </definition>
+
+    <definition name="*" extends="emptyLayout">
+        <put-attribute name="content" value="/WEB-INF/views/{1}.jsp"/>
+        <put-attribute name="main_menu" value="main"/>
+        <put-attribute name="sub_menu" value=""/>
+    </definition>
+
+   <definition name="*/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp"/>
+        <put-attribute name="main_menu" value="{1}"/>
+        <put-attribute name="sub_menu" value="{2}"/>
+    </definition>
+
+    <definition name="*/*/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
+        <put-attribute name="main_menu" value="{1}"/>
+        <put-attribute name="sub_menu" value="{2}"/>
+    </definition>
+
+    <definition name="*/*/popup/*" extends="popupLayout">
+        <put-attribute name="content" value="/WEB-INF/views/{1}/{2}/popup/{3}.jsp"/>
+        <put-attribute name="main_menu" value="{1}"/>
+        <put-attribute name="sub_menu" value="{2}"/>
+    </definition>
+
+
+</tiles-definitions>

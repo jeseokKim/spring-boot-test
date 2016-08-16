@@ -1,0 +1,28 @@
+#debug: true
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  datasource:
+    url: jdbc:log4jdbc:sqlserver://localhost:1433;databaseName=dbname
+    username: sa
+    password: 1234
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+
+
+multipart:
+  enabled: true
+  max-request-size: 1MB
+  file-size-threshold: 1MB
+  max-file-size: 1MB
+
+mybatis:
+  mapper-locations: classpath:sqlmap/mapper/**/*.xml
+  type-aliases-package: com.gseps.lng.operation
+  configuration:
+    aggressiveLazyLoading: false
+    lazyLoadingEnabled: true
+    lazyLoadTriggerMethods: ""
+    mapUnderscoreToCamelCase: true

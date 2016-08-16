@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gseps.lng.operation.admin.code.repository.CodeMapper">
+
+    <select id="selectCodeList" resultType="com.gseps.lng.operation.admin.code.model.CodeModel">
+        /* CodeMapper.selectCodeList */
+		SELECT AA.PAGINATION_TOT_CNT
+			  ,AA.PAGINATION_ROW_NUM
+			  ,AA.code_id
+			  ,AA.code_nm
+			  ,AA.pcode_id
+			  ,AA.code_desc
+			  ,AA.use_yn
+			  ,AA.etc1
+			  ,AA.etc2
+			  ,AA.etc3
+			  ,AA.etc4
+			  ,AA.etc5
+			  ,AA.etc1_desc
+			  ,AA.etc2_desc
+			  ,AA.etc3_desc
+			  ,AA.etc4_desc
+			  ,AA.etc5_desc
+  			  ,AA.UP_CODE_YN
+			  ,AA.DOWN_CODE_YN
+		  FROM (SELECT COUNT(*) OVER() AS PAGINATION_TOT_CNT
+					  ,ROW_NUMBER() OVER(ORDER BY (SELECT 1) ) PAGINATION_ROW_NUM
+					  ,A.code_id
+					  ,A.code_nm
+					  ,A.pcode_id
+					  ,A.code_desc
+					  ,A.use_yn
+					  ,A.etc1
+					  ,A.etc2
+					  ,A.etc3
+					  ,A.etc4
+					  ,A.etc5
+					  ,A.etc1_desc
+					  ,A.etc2_desc
+					  ,A.etc3_desc
+					  ,A.etc4_desc
+					  ,A.etc5_desc
+					  ,A.UP_CODE_YN
+					  ,A.DOWN_CODE_YN
+				 FROM ( SELECT TCT.code_id
+							  ,TCT.code_nm
+ 							  ,TCT.pcode_id
+							  ,TCT.code_desc
+							  ,TCT.use_yn
+							  ,TCT.etc1
+							  ,TCT.etc2
+							  ,TCT.etc3
+							  ,TCT.etc4
+							  ,TCT.etc5
+							  ,TCT.etc1_desc
+							  ,TCT.etc2_desc
+							  ,TCT.etc3_desc
+							  ,TCT.etc4_desc
+							  ,TCT.etc5_desc
+							  ,(SELECT CASE WHEN COUNT(AAA.code_id) > 0 THEN 'Y'
+											ELSE 'N'
+									    END
+							      FROM TEST_CODE_TABLE AAA
+								 WHERE AAA.CODE_ID = TCT.pcode_id) AS UP_CODE_YN /*상위코드 존재여부*/
+							  ,(SELECT CASE WHEN COUNT(BBB.code_id) > 0 THEN 'Y'
+											ELSE 'N'
+									    END
+							      FROM TEST_CODE_TABLE BBB
+								 WHERE BBB.pcode_id = TCT.CODE_ID) AS DOWN_CODE_YN /*하위코드 존재여부*/
+						  FROM TEST_CODE_TABLE TCT
+						 WHERE 1=1
+						  <choose>
+						  	<when test="searchKey != null and searchKey == 1">
+						  	  AND TCT.pcode_id = 0
+						  	</when>
+						  	<when test="searchKey != null and searchKey == 2">
+						  	  AND TCT.pcode_id = #{codeId}
+						  	</when>
+						  	<when test="searchKey != null and searchKey == 3">
+						      AND TCT.pcode_id IN (SELECT DISTINCT
+						      							  TCTB.pcode_id
+						                             FROM TEST_CODE_TABLE TCTB
+						                            WHERE TCTB.code_id = #{codeId}
+						                           )
+						  	</when>
+						  	<otherwise>
+						  		AND TCT.pcode_id = 0
+						  	</otherwise>
+						  </choose>
+					  ) A
+			   ) AA
+    </select>
+</mapper>
